@@ -2,7 +2,6 @@ import json
 import math
 
 
-# Function to calculate distance
 def calculate_distance(point1, point2):
 
     x1, y1 = point1
@@ -13,13 +12,11 @@ def calculate_distance(point1, point2):
     return distance
 
 
-# Read JSON file
 with open("base_case.json", "r") as file:
 
     data = json.load(file)
 
 
-# Store warehouses
 warehouses = {}
 
 for warehouse in data["warehouses"]:
@@ -27,7 +24,6 @@ for warehouse in data["warehouses"]:
     warehouses[warehouse["id"]] = warehouse["location"]
 
 
-# Store agents
 agents = {}
 
 for agent in data["agents"]:
@@ -39,11 +35,9 @@ for agent in data["agents"]:
     }
 
 
-# Get packages
 packages = data["packages"]
 
 
-# Assign packages
 for package in packages:
 
     warehouse_id = package["warehouse_id"]
@@ -57,7 +51,6 @@ for package in packages:
     minimum_distance = float("inf")
 
 
-    # Find nearest agent
     for agent_id, agent_info in agents.items():
 
         agent_location = agent_info["location"]
@@ -74,24 +67,20 @@ for package in packages:
             nearest_agent = agent_id
 
 
-    # Warehouse to destination distance
     delivery_distance = calculate_distance(
         warehouse_location,
         destination
     )
 
 
-    # Total distance
     total_trip_distance = minimum_distance + delivery_distance
 
 
-    # Update agent data
     agents[nearest_agent]["packages_delivered"] += 1
 
     agents[nearest_agent]["total_distance"] += total_trip_distance
 
 
-# Generate report
 report = {}
 
 best_agent = None
@@ -123,7 +112,6 @@ for agent_id, agent_info in agents.items():
     }
 
 
-    # Best agent
     if packages_delivered > 0 and efficiency < best_efficiency:
 
         best_efficiency = efficiency
@@ -134,11 +122,9 @@ for agent_id, agent_info in agents.items():
 report["best_agent"] = best_agent
 
 
-# Save report
 with open("report.json", "w") as file:
 
     json.dump(report, file, indent=4)
 
 
-# Print report
 print(json.dumps(report, indent=4))
